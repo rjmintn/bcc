@@ -10,11 +10,16 @@ class Bcc
     },
   }
     response = self.class.post("/sessions", values)
-    puts response['auth_token'] || response['message']
+    @token = response['auth_token']
+    puts response['message'] if @token.nil?
+
+
   rescue => e
     puts e
   end
 
+  def get_me
+  end
 
 
 end
