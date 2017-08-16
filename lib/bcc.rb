@@ -15,16 +15,13 @@ class Bcc
     response = self.class.post("/sessions", values)
     @token = response['auth_token']
     puts response['message'] if @token.nil?
-
-
   rescue => e
     puts e
   end
 
   def get_me
-    options = 'headers: { "authorization" => @token}'
+    options = {headers: { "authorization" => @token}}
     response = self.class.get('/users/me', options)
-    puts response_p = JSON.parse response
   end
 
 
