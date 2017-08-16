@@ -7,7 +7,8 @@ class Bcc
     values = {body: {
       email: e,
       password: p
-    }}
+    },
+  }
     response = self.class.post("/sessions", values)
     puts response['auth_token'] || response['message']
   rescue => e
