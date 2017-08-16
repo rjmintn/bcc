@@ -1,6 +1,9 @@
 require 'httparty'
+require 'json'
+
 class Bcc
   include HTTParty
+  include JSON
   base_uri 'https://www.bloc.io/api/v1'
 
   def initialize(e, p)
@@ -19,6 +22,9 @@ class Bcc
   end
 
   def get_me
+    options = 'headers: { "authorization" => @token}'
+    response = self.class.get('/users/me', options)
+    puts response_p = JSON.parse response
   end
 
 

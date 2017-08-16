@@ -11,5 +11,5 @@ Gem::Specification.new do |s|
   s.homepage = 'http://rubygems.org/gems/bcc'
   s.license = 'MIT'
   s.add_runtime_dependency 'httparty', '~> 0.15'
-  # s.add_runtime_dependency 'json', '~> 0.15'
+  s.add_runtime_dependency 'json'
 end
