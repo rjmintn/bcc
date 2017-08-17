@@ -48,6 +48,13 @@ class Bcc
     # puts availability
   end
 
+  def get_messages()
+  end
+
+  def create_message
+
+  end
+
 
 
   private
