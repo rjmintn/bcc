@@ -1,9 +1,12 @@
 require 'httparty'
 require 'json'
+require './lib/roadmap'
 
 class Bcc
   include HTTParty
   include JSON
+  include Roadmap
+
   base_uri 'https://www.bloc.io/api/v1'
 
   def initialize(e, p)
@@ -11,7 +14,6 @@ class Bcc
     #   email: e,
     #   password: p
     # }}
-    @count = 0
     values = {body: {
       email: e,
       password: p
@@ -28,25 +30,29 @@ class Bcc
     options = {headers: { "authorization" => @token}}
     response = self.class.get('/users/me', options)
     response['current_enrollment']['mentor_id']
+    # puts response
+    # response_to_file("get_me", response)
   end
 
   def get_mentor_availability (mentor_id)
     addr  = "/mentors/#{mentor_id}/student_availability"
     options = {headers: { "authorization" => @token}, body: {id: 0}}
     response = self.class.get(addr, options)
-    # puts response.to_a  
+    # puts response
+    # response_to_file("mentor_availability", response)
+    # puts response.to_a
     availability = []
     response.each do |r|
       availability << Array(r)
     end
-    puts availability
+    # puts availability
   end
 
 
+
   private
-  def response_to_file(jsondata)
-    @count += 1
-    File.open("output-#{@count}.js","w") do |f|
+  def response_to_file(name, jsondata)
+    File.open("#{name}.js","w") do |f|
       f.write(jsondata)
     end
   end
@@ -54,20 +60,9 @@ class Bcc
 end
 
 
-n = Bcc.new("rjmorawski@gmail.com", "wd212dr1")
+n = Bcc.new()
 n.get_me
 mentor_id = 539470
 n.get_mentor_availability(mentor_id)
-
-
-  # require 'httparty'
-  # require 'json'
-  #
-  #     values = {body: {
-  #       "email": "rjmorawski@gmail.com",
-  #       "password": "wd212dr1"
-  #     }}
-  #
-  # response = HTTParty.post('https://www.bloc.io/api/v1/sessions', values)
-  # puts JSON.pretty_generate(response)
-  # puts response
+n.get_roadmap(37)
+n.get_checkpoint(2295)
