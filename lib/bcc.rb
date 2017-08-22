@@ -4,6 +4,7 @@ require './lib/roadmap'
 
 class Bcc
   include HTTParty
+  debug_output $stderr
   include JSON
   include Roadmap
 
@@ -26,26 +27,20 @@ class Bcc
     options = {headers: { "authorization" => @token}}
     response = self.class.get('/users/me', options)
     response['current_enrollment']['mentor_id']
-    # puts response
-    response_to_file("get_me", response)
   end
 
   def get_mentor_availability (mentor_id)
     addr  = "/mentors/#{mentor_id}/student_availability"
     options = {headers: { "authorization" => @token}, body: {id: 0}}
     response = self.class.get(addr, options)
-    # puts response
-    # response_to_file("mentor_availability", response)
-    # puts response.to_a
     availability = []
     response.each do |r|
       availability << Array(r)
     end
-    # puts availability
+    puts availability
   end
 
   def get_messages(page_num = 1000)
-
     addr  = "/message_threads"
     options = {headers: { "authorization" => @token}, body: {"page": page_num}}
     @response = self.class.get(addr, options)
@@ -56,8 +51,10 @@ class Bcc
         response = self.class.get(addr, {headers: { "authorization" => @token}, body: {"page": page_num}})
         @response['items'] += response['items']
       end
-     end
-    response_to_file("messages", @response['items'])
+    else
+      @response = self.class.get(addr, {headers: { "authorization" => @token}, body: {"page": page_num}})
+    end
+    puts @response['items']
   end
 
   def create_message(sender, recipient_id, token, subject, text)
@@ -67,17 +64,21 @@ class Bcc
         "authorization" => @token
       },
       body: {
-        "sender": sender,
-        "recipient_id": recipient_id,
-        "token": token,
-        "subject": subject,
-        "stripped-text": text
+        "sender": 'rjmorawski@gmail.com',
+        "recipient_id": 539470,
+        # "token": '3c56603e-c6dc-4a69-9e4e-c105cb651b63',
+        "subject": 'Take that',
+        "stripped-text": 'Did you hear that? That is me dropping the mic and walking away. BOOM!'
         }
       }
-    response = self.class.get(addr, options)
-
+    response = self.class.get("/message_threads", options)
   end
 
+  def get_mentor_list
+    addr  = "/mentors/#{mentor_id}/student_availability"
+    options = {headers: { "authorization" => @token}, body: {id: 0}}
+    response = self.class.get(addr, options)
+  end
 
 
   private
@@ -88,14 +89,3 @@ class Bcc
   end
 
 end
-
-
-n = Bcc.new("rjmorawski@gmail.com", "wd212dr1")
-n.get_me
-# mentor_id = 539470
-# n.get_mentor_availability(mentor_id)
-# n.get_roadmap(37)
-# n.get_checkpoint(2295)
-n.get_messages(2) #selected message page
-n.get_messages  #all messages
-n.create_message("rjmorawski@gmail.com", nil, "3c56603e-c6dc-4a69-9e4e-c105cb651b63", "")

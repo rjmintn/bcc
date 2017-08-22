@@ -4,10 +4,6 @@ module Roadmap
     addr  = "/roadmaps/#{roadmap_id}"
     options = {headers: {'authorization' => @token}, body: {id: 0}}
     response = JSON.parse(self.class.get(addr, options).to_s)
-
-# for reference
-    # response_to_file("get_roadmap", response)
-
 #collects sections and checkpoints
     response.select!{|k,v| k == "sections"}
     a = response["sections"]
@@ -15,7 +11,6 @@ module Roadmap
       response_to_file("section_#{section["id"]}", response)
       section["checkpoints"].each do |checkpoint|
         response_to_file("section_#{checkpoint["id"]}", response)
-        # puts checkpoint["id"]
       end
     end
   end
