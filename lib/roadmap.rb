@@ -8,18 +8,21 @@ module Roadmap
     response.select!{|k,v| k == "sections"}
     a = response["sections"]
     a.each do |section|
-      response_to_file("section_#{section["id"]}", response)
+      #response_to_file("section_#{section["id"]}", section )
+      puts "Section #{section["id"]}"
       section["checkpoints"].each do |checkpoint|
-        response_to_file("section_#{checkpoint["id"]}", response)
+        #response_to_file("checkpoint_#{checkpoint["id"]}", checkpoint)
+        puts "Checkpoint #{checkpoint["id"]}"
       end
     end
+    puts "done"
   end
 
   def get_checkpoint(checkpoint_id)
     addr  = "/checkpoints/#{checkpoint_id}"
     options = {headers: {'authorization' => @token}}
     response = JSON.parse(self.class.get(addr, options).to_s)
-    response_to_file("get_checkpoint", response)
+    
   end
 
   private

@@ -67,17 +67,46 @@ class Bcc
         "sender": 'rjmorawski@gmail.com',
         "recipient_id": 539470,
         # "token": '3c56603e-c6dc-4a69-9e4e-c105cb651b63',
-        "subject": 'Take that',
-        "stripped-text": 'Did you hear that? That is me dropping the mic and walking away. BOOM!'
+        "subject": '404',
+        "stripped-text": 'Say 404 one more time. I dare you. I double dare you. Sent from the BCC api client.'
         }
       }
-    response = self.class.get("/message_threads", options)
+    response = self.class.post("/messages", options)
   end
 
   def get_mentor_list
     addr  = "/mentors/#{mentor_id}/student_availability"
     options = {headers: { "authorization" => @token}, body: {id: 0}}
     response = self.class.get(addr, options)
+  end
+
+  def create_submission(checkpoint_id, assignment_branch, assignment_commit_link, comment)
+    addr = "/checkpoint_submissions"
+    options = {headers: { "authorization" => @token}, body:{
+      assignment_branch: assignment_branch,
+      assignment_commit_link: assignment_commit_link,
+      checkpoint_id: checkpoint_id,
+      comment: comment,
+      enrollment_id: 29059,
+      work_commit_link:""
+      }}
+      response = self.class.post(addr, options)
+      response_to_file("submit_checkpoint", response)
+  end
+
+  def update_submission(checkpoint_id, assignment_branch, assignment_commit_link, comment)
+    addr = "/checkpoint_submissions/217202"
+    options = {headers: { "authorization" => @token}, body:{
+      assignment_branch: assignment_branch,
+      assignment_commit_link: assignment_commit_link,
+      checkpoint_id: checkpoint_id,
+      comment: comment,
+      enrollment_id: 29059,
+      id: 217202,
+      work_commit_link:""
+      }}
+      response = self.class.put(addr, options)
+      response_to_file("submit_checkpoint", response)
   end
 
 
